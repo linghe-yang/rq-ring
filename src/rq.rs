@@ -46,7 +46,7 @@ impl Rq {
     }
 
     // Serialize the Rq (Poly coefficients) to a byte vector
-    fn to_bytes(&self) -> Vec<u8> {
+    pub fn to_bytes(&self) -> Vec<u8> {
         let mut bytes = Vec::with_capacity((params::N * 4) as usize); // Each i32 is 4 bytes
         let mut poly = self.poly;
         reduce(&mut poly);
@@ -58,7 +58,7 @@ impl Rq {
     }
 
     // Deserialize a byte slice into an Rq, if valid
-    fn from_bytes(bytes: &[u8]) -> Option<Self> {
+    pub fn from_bytes(bytes: &[u8]) -> Option<Self> {
         if bytes.len() != (params::N * 4) as usize { // Each i32 is 4 bytes
             return None;
         }

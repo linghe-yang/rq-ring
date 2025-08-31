@@ -26,12 +26,12 @@ impl Zq {
         }
     }
 
-    fn to_bytes(&self) -> Vec<u8> {
+    pub fn to_bytes(&self) -> Vec<u8> {
         self.value.residue().to_le_bytes().to_vec()
     }
 
     // Deserialize a byte slice into a Zq, assuming it represents a reduced residue
-    fn from_bytes(bytes: &[u8]) -> Option<Self> {
+    pub fn from_bytes(bytes: &[u8]) -> Option<Self> {
         if bytes.len() != 4 { // u32 is 4 bytes
             return None;
         }
