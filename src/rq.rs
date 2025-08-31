@@ -190,10 +190,9 @@ impl Mul<Zq> for Rq {
         let mut result = Poly::default();
         let s: i64 = scalar.norm() as i64;
         for (i,x) in self.poly.coeffs.iter().enumerate() {
-            let prod = *x as i64 * s;
+            let prod = (*x as i64 * s) % params::Q as i64;
             result.coeffs[i] = prod as i32;
         }
-        reduce(&mut result);
         // for i in 0..params::N as usize {
         //     let prod = (self.poly.coeffs[i] as i64 * s) % params::Q as i64;
         //     result.coeffs[i] = prod as i32;
