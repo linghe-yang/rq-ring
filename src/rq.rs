@@ -1,4 +1,4 @@
-use std::cmp::PartialEq;
+use std::cmp::{Ordering, PartialEq};
 use crystals_dilithium::poly::*;
 use crystals_dilithium::params;
 use rand::Rng;
@@ -6,6 +6,7 @@ use serde::de::Visitor;
 use serde::ser::SerializeSeq;
 use serde::{de, Deserialize, Deserializer, Serialize, Serializer};
 use std::fmt;
+use std::hash::{Hash, Hasher};
 use std::ops::{Add, Mul, Sub};
 use crystals_dilithium::poly::{Poly, reduce, caddq};
 use num_traits::Zero;
@@ -101,6 +102,26 @@ impl PartialEq<Rq> for &Rq {
         reduce(&mut t2);
         caddq(&mut t2);
         t1.coeffs == t2.coeffs
+    }
+}
+
+impl Eq for Rq {}
+
+impl PartialOrd for Rq {
+    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+        Some(self.cmp(other))
+    }
+}
+
+impl Ord for Rq {
+    fn cmp(&self, other: &Self) -> Ordering {
+        self.poly.coeffs.cmp(&other.poly.coeffs)
+    }
+}
+
+impl Hash for Rq {
+    fn hash<H: Hasher>(&self, state: &mut H) {
+        self.poly.coeffs.hash(state);
     }
 }
 

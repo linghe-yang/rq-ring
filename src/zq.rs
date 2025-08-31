@@ -1,5 +1,6 @@
 use std::cmp::Ordering;
 use std::fmt;
+use std::hash::{Hash, Hasher};
 use std::ops::{Add, Mul, Sub, Div, Neg};
 use rand::Rng;
 use num_modular::{ModularInteger, MontgomeryInt};
@@ -146,12 +147,21 @@ impl PartialEq for Zq {
 }
 
 impl PartialOrd for Zq {
-    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
-        Some(self.value.residue().cmp(&other.value.residue()))
+    fn partial_cmp(&self, other: &Self) -> Option<Ordering> { Some(self.cmp(other)) }
+}
+impl Ord for Zq {
+    fn cmp(&self, other: &Self) -> Ordering {
+        self.value.residue().cmp(&other.value.residue())
     }
 }
 
 impl Eq for Zq {}
+
+impl Hash for Zq {
+    fn hash<H: Hasher>(&self, state: &mut H) {
+        self.value.residue().hash(state);
+    }
+}
 
 impl fmt::Debug for Zq {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
